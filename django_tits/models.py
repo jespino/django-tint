@@ -1,11 +1,5 @@
 import hashlib
 import os.path
-try:
-    from cStringIO import StringIO
-except:
-    from StringIO import StringIO
-
-import PIL
 
 from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -64,24 +58,7 @@ class ThumbnailManager(models.Manager):
         try:
             thumbnail = image.get_by_transformation(transformation)
         except Thumbnail.DoesNotExist:
-            img = image_proc.transform(image.image, *TITS_TRANSFORMATIONS[transformation])
-            # save to memory
-            buf = StringIO()
-            try:
-                img.save(buf, img.format, **img.info)
-            except IOError:
-                if img.info.get('progression'):
-                    orig_MAXBLOCK = PIL.ImageFile.MAXBLOCK
-                    temp_MAXBLOCK = 1048576
-                    if orig_MAXBLOCK >= temp_MAXBLOCK:
-                        raise
-                    PIL.ImageFile.MAXBLOCK = temp_MAXBLOCK
-                    try:
-                        img.save(buf, img.format, **img.info)
-                    finally:
-                        PIL.ImageFile.MAXBLOCK = orig_MAXBLOCK
-                else:
-                    raise
+            buf = image_proc.transform(image.image, *TITS_TRANSFORMATIONS[transformation])
             # and save to storage
             original_dir, original_file = os.path.split(image.image.name)
             thumb_file = InMemoryUploadedFile(buf, "image", original_file, None, buf.tell(), None)

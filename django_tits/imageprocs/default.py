@@ -1,5 +1,11 @@
 import os
-from PIL import Image, ImageOps, ImageEnhance
+
+try:
+    from cStringIO import StringIO
+except:
+    from StringIO import StringIO
+
+from PIL import Image, ImageOps, ImageEnhance, ImageFile
 
 class DefaultImageProc(object):
     def crop(self, image, params):
@@ -102,6 +108,25 @@ class DefaultImageProc(object):
         im_format, im_info = im.format, im.info
         for action in actions:
             im = getattr(self, action['action'])(im, action)
-        image.close()
         im.format, im.info = im_format, im_info
-        return im
+
+        # save to memory
+        buf = StringIO()
+        try:
+            im.save(buf, im.format, **im.info)
+        except IOError:
+            if im.info.get('progression'):
+                orig_MAXBLOCK = ImageFile.MAXBLOCK
+                temp_MAXBLOCK = 1048576
+                if orig_MAXBLOCK >= temp_MAXBLOCK:
+                    raise
+                ImageFile.MAXBLOCK = temp_MAXBLOCK
+                try:
+                    im.save(buf, im.format, **im.info)
+                finally:
+                    ImageFile.MAXBLOCK = orig_MAXBLOCK
+            else:
+                raise
+        image.close()
+
+        return buf
