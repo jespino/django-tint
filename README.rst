@@ -1,7 +1,7 @@
 django-tits
 ===========
 
-Transparent Image Transoformation System (based on django-images).
+Transparent Image Transformation System (based on django-images).
 
 Configuration example::
 
