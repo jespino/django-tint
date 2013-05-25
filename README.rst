@@ -55,6 +55,11 @@ equialize
 
 Equalize the image histogram.
 
+autocontrast
+------------
+
+Maximize (normalize) image contrast.
+
 invert
 ------
 

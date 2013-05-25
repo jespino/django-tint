@@ -83,6 +83,9 @@ class DefaultImageProc(object):
     def mirror(self, image, params):
         return ImageOps.mirror(image)
 
+    def autocontrast(self, image, params):
+        return ImageOps.autocontrast(image, params.get('cutoff', 0))
+
     def equalize(self, image, params):
         return ImageOps.equalize(image)
 
