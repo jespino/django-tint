@@ -4,15 +4,16 @@ try:
     from cStringIO import StringIO
 except:
     from StringIO import StringIO
-    
+
 import PIL
 
 from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.urlresolvers import reverse
 
-from . import utils
-from .settings import IMAGE_SIZES
+from .settings import TITS_TRANSFORMATIONS
+
+from .imageprocs import image_proc
 
 def hashed_upload_to(prefix, instance, filename):
     hasher = hashlib.md5()
@@ -39,31 +40,31 @@ class Image(models.Model):
     height = models.PositiveIntegerField(default=0, editable=False)
     width = models.PositiveIntegerField(default=0, editable=False)
 
-    def get_by_size(self, size):
-        return self.thumbnail_set.get(size=size)
+    def get_by_transformation(self, transformation):
+        return self.thumbnail_set.get(transformation=transformation)
 
-    def get_absolute_url(self, size=None):
-        if not size:
+    def get_absolute_url(self, transformation=None):
+        if not transformation:
             return self.image.url
         try:
-            return self.get_by_size(size).image.url
+            return self.get_by_transformation(transformation).image.url
         except Thumbnail.DoesNotExist:
-            return reverse('image-thumbnail', args=(self.id, size))
+            return reverse('image-thumbnail', args=(self.id, transformation))
 
 
 def thumbnail_upload_to(instance, filename, **kwargs):
     return hashed_upload_to('image/thumbnail/by-md5/', instance, filename)
-    
+
 
 class ThumbnailManager(models.Manager):
-    def get_or_create_at_size(self, image_id, size):
+    def get_or_create_at_transformation(self, image_id, transformation):
         image = Image.objects.get(id=image_id)
-        if not size in IMAGE_SIZES:
-            raise ValueError("Received unknown size: %s" % size)
+        if not transformation in TITS_TRANSFORMATIONS:
+            raise ValueError("Received unknown transformation: %s" % transformation)
         try:
-            thumbnail = image.get_by_size(size)
+            thumbnail = image.get_by_transformation(transformation)
         except Thumbnail.DoesNotExist:
-            img = utils.scale_and_crop(image.image, **IMAGE_SIZES[size])
+            img = image_proc.transform(image.image, *TITS_TRANSFORMATIONS[transformation])
             # save to memory
             buf = StringIO()
             try:
@@ -85,7 +86,7 @@ class ThumbnailManager(models.Manager):
             original_dir, original_file = os.path.split(image.image.name)
             thumb_file = InMemoryUploadedFile(buf, "image", original_file, None, buf.tell(), None)
             thumbnail, created = image.thumbnail_set.get_or_create(
-                size=size,
+                transformation=transformation,
                 defaults={'image': thumb_file})
         return thumbnail
 
@@ -94,14 +95,14 @@ class Thumbnail(models.Model):
     image = models.ImageField(upload_to=thumbnail_upload_to,
             height_field='height', width_field='width',
             max_length=255)
-    size = models.CharField(max_length=100)
+    transformation = models.CharField(max_length=100)
     height = models.PositiveIntegerField(default=0, editable=False)
     width = models.PositiveIntegerField(default=0, editable=False)
-    
+
     objects = ThumbnailManager()
 
     class Meta:
-        unique_together = ('original', 'size')
+        unique_together = ('original', 'transformation')
 
     def get_absolute_url(self):
         return self.image.url

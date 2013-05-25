@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from setuptools import setup, find_packages
 
 CLASSIFIERS = [
@@ -23,10 +25,10 @@ REQUIREMENTS = [
     'pillow >= 1.7.8',
 ]
 
-setup(name='django-images',
-      author='Mirumee Software',
-      author_email='hello@mirumee.com',
-      description='A database-driver thumbnailing solution for Django',
+setup(name='django-tits',
+      author='Jesús Espino',
+      author_email='jespinog@gmail.com',
+      description='Transparent image transformation system',
       license='BSD',
       version='0.3',
       packages=find_packages(),
