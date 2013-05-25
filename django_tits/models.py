@@ -37,12 +37,15 @@ class Image(models.Model):
     def get_by_transformation(self, transformation):
         return self.thumbnail_set.get(transformation=transformation)
 
-    def get_absolute_url(self, transformation=None):
+    def get_absolute_url(self, transformation=None, wait_creation=False):
         if not transformation:
             return self.image.url
         try:
             return self.get_by_transformation(transformation).image.url
         except Thumbnail.DoesNotExist:
+            if wait_creation:
+                thumbnail = Thumbnail.objects.get_or_create_at_transformation(self.id, transformation)
+                return thumbnail.image.url
             return reverse('image-thumbnail', args=(self.id, transformation))
 
 
