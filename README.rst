@@ -1,7 +1,4 @@
-django-tits
-===========
-
-Transparent Image Transformation System (based on django-images).
+.. image:: logo/logo.png
 
 Default ImageProc Actions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
