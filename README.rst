@@ -47,8 +47,8 @@ mirror
 
 Flip the image horizontally.
 
-equialize
----------
+equalize
+--------
 
 Equalize the image histogram.
 
