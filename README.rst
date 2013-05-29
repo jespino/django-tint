@@ -7,7 +7,7 @@ You must define your transformation in your :code:`TITS_TRANSFORMATIONS` setting
 variable.
 
 You set your images on your models puting a :code:`ForeignKey` to
-code:`django_tits.models.Image`.
+:code:`django_tits.models.Image`.
 
 Then you put your images in your templates using the :code:`at_transformation` filter. Example::
 
