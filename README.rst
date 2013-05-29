@@ -1,5 +1,25 @@
 .. image:: logo/logo.png
 
+Usage
+~~~~~
+
+You must define your transformation in your :code:`TITS_TRANSFORMATIONS` settings
+variable.
+
+You set your images on your models puting a :code:`ForeignKey` to
+code:`django_tits.models.Image`.
+
+Then you put your images in your templates using the :code:`at_transformation` filter. Example::
+
+  {% load tits %}
+
+  <img src="{{ mymodel.my_image_field|at_transformation:"my-transformation-definition" }}" />
+
+If you use django-jinja you only have to use the :code:`image_at_transformation` function. Example::
+
+  <img src="{{ image_at_transformation(mymodel.my_image_field, "my-transformation-definition") }}" />
+
+
 Default ImageProc Actions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -38,13 +58,13 @@ list:
 Configuration
 ~~~~~~~~~~~~~
 
-In Django-tits you can define your ImageProc class (normally will be a subclass
-of the DefaultImageProc) to add your own image transformations. You can use it
-configuring the TITS_IMAGE_PROCESSOR settings variable. Example::
+In Django-tits you can define your :code:`ImageProc` class (normally will be a subclass
+of the :code:`DefaultImageProc`) to add your own image transformations. You can use it
+configuring the :code:`TITS_IMAGE_PROCESSOR` settings variable. Example::
 
   TITS_IMAGE_PROCESSOR = 'myapp.my_image_processor_module.MyImageProcessorClass'
 
-If the variable is not defined the DefaultImageProc is used.
+If the variable is not defined the :code:`DefaultImageProc` is used.
 
 Then you can configure your transformations as a dictionary. The name of the
 transformation is the key, and the value is a list of "actions". An action is a
@@ -59,7 +79,6 @@ keys the parameters to use in this action. Example::
             height: '768',
             align: 'center',
             valign: 'middle',
-            format: 'png',
         },
         {
             action: 'watermark',
@@ -74,7 +93,6 @@ keys the parameters to use in this action. Example::
             height: '600',
             align: 'center',
             valign: 'middle',
-            format: 'png',
         },
         {
             action: 'watermark',
