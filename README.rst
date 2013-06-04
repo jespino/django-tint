@@ -1,5 +1,13 @@
 .. image:: logo/logo.png
 
+------
+
+.. image:: https://pypip.in/v/django-tits/badge.png
+    :target: https://crate.io/packages/django-tits
+
+.. image:: https://pypip.in/d/django-tits/badge.png
+    :target: https://crate.io/packages/django-tits
+
 Usage
 ~~~~~
 
