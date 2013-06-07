@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
+import os
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings'
 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
@@ -34,6 +37,8 @@ setup(name='django-tits',
       setup_requires = [
           'versiontools >= 1.8',
       ],
+      test_suite = 'nose.collector',
+      tests_require = ['nose >= 1.2.1', 'django >= 1.3.0'],
       packages=find_packages(),
       include_package_data=True,
       classifiers=CLASSIFIERS,

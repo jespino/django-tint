@@ -33,19 +33,19 @@ class DefaultImageProc(object):
         if height >= params['height']:
             if valign == 'middle':
                 top = (height/2)-(params['height']/2)
-                botton = (height/2)+(params['height']/2)
+                bottom = (height/2)+(params['height']/2)
             elif valign == 'top':
                 top = 0
-                botton = params['height']
-            elif valign == 'botton':
-                top = 0
-                botton = params['height']
+                bottom = params['height']
+            elif valign == 'bottom':
+                top = height-params['height']
+                bottom = height
             else:
                 raise Exception('Invalid valign')
         else:
             top = 0
-            botton = height
-        return image.crop((left, top, right, botton))
+            bottom = height
+        return image.crop((left, top, right, bottom))
 
     def fit(self, image, params):
         num_align = [0.0, 0.0]
@@ -65,7 +65,7 @@ class DefaultImageProc(object):
             num_align[0] = 0.5
         elif valign == 'top':
             num_align[0] = 0.0
-        elif valign == 'botton':
+        elif valign == 'bottom':
             num_align[0] = 1.0
         else:
             raise Exception('Invalid valign')
