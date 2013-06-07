@@ -75,6 +75,7 @@ class DefaultImageProc(object):
         return ImageOps.grayscale(image)
 
     def invert(self, image, params):
+        image = image.convert('RGB')
         return ImageOps.invert(image)
 
     def flip(self, image, params):

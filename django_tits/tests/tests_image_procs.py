@@ -33,10 +33,10 @@ class DefaultImageProcTestCase(unittest.TestCase):
         cls.green = (0, 255, 0, 255)
         cls.blue = (0, 0, 255, 255)
         cls.yellow = (255, 255, 0, 255)
+        cls.image = Image.open(os.path.join(os.path.dirname(__file__), 'test-image.png'), "r")
 
     def test_crop(self):
-        image = Image.open(os.path.join(os.path.dirname(__file__), 'test-image.png'))
-        image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'top' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'top' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -45,7 +45,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.white, self.white, self.white]
         )
 
-        image_result = self.proc.crop(image.copy(), { "width": 480, "height": 320, "align": 'center', "valign": 'top' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 480, "height": 320, "align": 'center', "valign": 'top' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -54,7 +54,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.white, self.white, self.white]
         )
 
-        image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'right', "valign": 'top' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'right', "valign": 'top' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -62,7 +62,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.white, self.white, self.green],
                 [self.white, self.white, self.white]
         )
-        image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'middle' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'middle' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -71,7 +71,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.blue, self.white, self.white]
         )
 
-        image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'center', "valign": 'middle' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'center', "valign": 'middle' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -80,7 +80,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.white, self.white, self.white]
         )
 
-        image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'right', "valign": 'middle' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'right', "valign": 'middle' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -88,7 +88,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.white, self.white, self.white],
                 [self.white, self.white, self.yellow]
         )
-        image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'bottom' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'bottom' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -97,7 +97,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.blue, self.blue, self.white]
         )
 
-        image_result = self.proc.crop(image.copy(), { "width": 480, "height": 320, "align": 'center', "valign": 'bottom' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 480, "height": 320, "align": 'center', "valign": 'bottom' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -106,11 +106,52 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.blue, self.white, self.yellow]
         )
 
-        image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'right', "valign": 'bottom' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'right', "valign": 'bottom' })
         self.assertImageEdges(
                 image_result,
                 10,
                 [self.white, self.white, self.white],
                 [self.white, self.white, self.yellow],
                 [self.white, self.yellow, self.yellow]
+        )
+
+    def test_mirror(self):
+        image_result = self.proc.mirror(self.image.copy(), {})
+        self.assertImageEdges(
+                image_result,
+                10,
+                [self.green, self.white, self.red],
+                [self.white, self.white, self.white],
+                [self.yellow, self.white, self.blue]
+        )
+
+    def test_flip(self):
+        image_result = self.proc.flip(self.image.copy(), {})
+        self.assertImageEdges(
+                image_result,
+                10,
+                [self.blue, self.white, self.yellow],
+                [self.white, self.white, self.white],
+                [self.red, self.white, self.green]
+        )
+
+    def test_grayscale(self):
+        image_result = self.proc.grayscale(self.image.copy(), {})
+        # Asserting primary colors converted to grayscale
+        self.assertImageEdges(
+                image_result,
+                10,
+                [76, 255, 149],
+                [255, 255, 255],
+                [29, 255, 225]
+        )
+
+    def test_invert(self):
+        image_result = self.proc.invert(self.image.copy(), {})
+        self.assertImageEdges(
+                image_result,
+                10,
+                [(0, 255, 255), self.black[0:-1], (255, 0, 255)],
+                [self.black[0:-1], self.black[0:-1], self.black[0:-1]],
+                [(255, 255, 0), self.black[0:-1], (0, 0, 255)]
         )
