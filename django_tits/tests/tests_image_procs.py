@@ -29,6 +29,10 @@ class DefaultImageProcTestCase(unittest.TestCase):
         cls.proc = DefaultImageProc()
         cls.black = (0, 0, 0, 255)
         cls.white = (255, 255, 255, 255)
+        cls.red = (255, 0, 0, 255)
+        cls.green = (0, 255, 0, 255)
+        cls.blue = (0, 0, 255, 255)
+        cls.yellow = (255, 255, 0, 255)
 
     def test_crop(self):
         image = Image.open(os.path.join(os.path.dirname(__file__), 'test-image.png'))
@@ -36,8 +40,8 @@ class DefaultImageProcTestCase(unittest.TestCase):
         self.assertImageEdges(
                 image_result,
                 10,
-                [self.black, self.black, self.white],
-                [self.black, self.white, self.white],
+                [self.red, self.red, self.white],
+                [self.red, self.white, self.white],
                 [self.white, self.white, self.white]
         )
 
@@ -45,7 +49,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
         self.assertImageEdges(
                 image_result,
                 10,
-                [self.black, self.white, self.black],
+                [self.red, self.white, self.green],
                 [self.white, self.white, self.white],
                 [self.white, self.white, self.white]
         )
@@ -54,17 +58,17 @@ class DefaultImageProcTestCase(unittest.TestCase):
         self.assertImageEdges(
                 image_result,
                 10,
-                [self.white, self.black, self.black],
-                [self.white, self.white, self.black],
+                [self.white, self.green, self.green],
+                [self.white, self.white, self.green],
                 [self.white, self.white, self.white]
         )
         image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'middle' })
         self.assertImageEdges(
                 image_result,
                 10,
-                [self.black, self.white, self.white],
+                [self.red, self.white, self.white],
                 [self.white, self.white, self.white],
-                [self.black, self.white, self.white]
+                [self.blue, self.white, self.white]
         )
 
         image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'center', "valign": 'middle' })
@@ -80,17 +84,17 @@ class DefaultImageProcTestCase(unittest.TestCase):
         self.assertImageEdges(
                 image_result,
                 10,
-                [self.white, self.white, self.black],
+                [self.white, self.white, self.green],
                 [self.white, self.white, self.white],
-                [self.white, self.white, self.black]
+                [self.white, self.white, self.yellow]
         )
         image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'bottom' })
         self.assertImageEdges(
                 image_result,
                 10,
                 [self.white, self.white, self.white],
-                [self.black, self.white, self.white],
-                [self.black, self.black, self.white]
+                [self.blue, self.white, self.white],
+                [self.blue, self.blue, self.white]
         )
 
         image_result = self.proc.crop(image.copy(), { "width": 480, "height": 320, "align": 'center', "valign": 'bottom' })
@@ -99,7 +103,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 10,
                 [self.white, self.white, self.white],
                 [self.white, self.white, self.white],
-                [self.black, self.white, self.black]
+                [self.blue, self.white, self.yellow]
         )
 
         image_result = self.proc.crop(image.copy(), { "width": 320, "height": 240, "align": 'right', "valign": 'bottom' })
@@ -107,6 +111,6 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 image_result,
                 10,
                 [self.white, self.white, self.white],
-                [self.white, self.white, self.black],
-                [self.white, self.black, self.black]
+                [self.white, self.white, self.yellow],
+                [self.white, self.yellow, self.yellow]
         )
