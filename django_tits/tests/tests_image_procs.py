@@ -6,23 +6,34 @@ import os
 
 class DefaultImageProcTestCase(unittest.TestCase):
     def assertImageEdges(self, image, edge_width, colors_top, colors_middle, colors_bottom):
+        self.assertTrue(self.verify_edges(image, edge_width, colors_top, colors_middle, colors_bottom))
+
+    def assertNotImageEdges(self, image, edge_width, colors_top, colors_middle, colors_bottom):
+        self.assertFalse(self.verify_edges(image, edge_width, colors_top, colors_middle, colors_bottom))
+
+    def verify_edges(self, image, edge_width, colors_top=None, colors_middle=None, colors_bottom=None):
+        result = True
         width, height = image.size
 
         for x in range(edge_width):
-            # TOP check
-            self.assertEqual(image.getpixel((x, x)), colors_top[0])
-            self.assertEqual(image.getpixel((int(width/2), x)), colors_top[1])
-            self.assertEqual(image.getpixel((width-edge_width+x, edge_width-x)), colors_top[2])
+            if colors_top:
+                # TOP check
+                result = result and image.getpixel((x, x)) == colors_top[0]
+                result = result and image.getpixel((int(width/2), x)) == colors_top[1]
+                result = result and image.getpixel((width-edge_width+x, edge_width-x)) == colors_top[2]
 
-            # MIDDLE check
-            self.assertEqual(image.getpixel((x, int(height/2))), colors_middle[0])
-            self.assertEqual(image.getpixel(((width/2), int(height/2))), colors_middle[1])
-            self.assertEqual(image.getpixel((width-edge_width+x, int(height/2))), colors_middle[2])
+            if colors_middle:
+                # MIDDLE check
+                result = result and image.getpixel((x, int(height/2))) == colors_middle[0]
+                result = result and image.getpixel(((width/2), int(height/2))) == colors_middle[1]
+                result = result and image.getpixel((width-edge_width+x, int(height/2))) == colors_middle[2]
 
-            # BOTTOM check
-            self.assertEqual(image.getpixel((edge_width-x, height-edge_width+x)), colors_bottom[0])
-            self.assertEqual(image.getpixel((int(width/2), height-edge_width+x)), colors_bottom[1])
-            self.assertEqual(image.getpixel((width-edge_width+x, height-edge_width+x)), colors_bottom[2])
+            if colors_bottom:
+                # BOTTOM check
+                result = result and image.getpixel((edge_width-x, height-edge_width+x)) == colors_bottom[0]
+                result = result and image.getpixel((int(width/2), height-edge_width+x)) == colors_bottom[1]
+                result = result and image.getpixel((width-edge_width+x, height-edge_width+x)) == colors_bottom[2]
+        return result
 
     @classmethod
     def setUpClass(cls):
@@ -155,3 +166,25 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.black[0:-1], self.black[0:-1], self.black[0:-1]],
                 [(255, 255, 0), self.black[0:-1], (0, 0, 255)]
         )
+
+    def test_scale(self):
+        image_result = self.proc.scale(self.image.copy(), { "height": 80, "width": 60})
+        self.assertImageEdges(
+                image_result,
+                4,
+                [self.red, self.white, self.green],
+                [self.white, self.white, self.white],
+                [self.blue, self.white, self.yellow]
+        )
+        self.assertNotImageEdges(
+                image_result,
+                10,
+                [self.red, self.white, self.green],
+                [self.white, self.white, self.white],
+                [self.blue, self.white, self.yellow]
+        )
+
+        image_result = self.proc.scale(self.image.copy(), { "height": 640, "width": 120})
+        self.assertEqual(image_result.getpixel((10, 20)), (255, 0, 0, 255))
+        self.assertEqual(image_result.getpixel((10, 120)), (255, 255, 255, 255))
+        self.assertEqual(image_result.getpixel((3, 120)), (255, 0, 0, 255))
