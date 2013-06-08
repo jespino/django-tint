@@ -13,7 +13,7 @@ from .imageprocs import image_proc
 
 def hashed_upload_to(prefix, instance, filename):
     hasher = hashlib.md5()
-    instance.image.open()
+    instance.image.open('rb')
     for chunk in instance.image.chunks():
         hasher.update(chunk)
     hash = hasher.hexdigest()

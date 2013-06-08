@@ -11,7 +11,7 @@ call_command('syncdb', interactive=False)
 
 class ModelsTestCase(unittest.TestCase):
     def setUp(self):
-        image_file = open(os.path.join(os.path.dirname(__file__), 'test-image.png'), 'r')
+        image_file = open(os.path.join(os.path.dirname(__file__), 'test-image.png'), 'rb')
         self.image = models.Image.objects.create(
             image=ImageFile(image_file, name='test-image.png'),
             height=640,

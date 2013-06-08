@@ -1,9 +1,6 @@
 import os
 
-try:
-    from cStringIO import StringIO
-except:
-    from StringIO import StringIO
+from io import BytesIO
 
 from PIL import Image, ImageOps, ImageEnhance, ImageFile
 
@@ -115,7 +112,7 @@ class DefaultImageProc(object):
         im.format, im.info = im_format, im_info
 
         # save to memory
-        buf = StringIO()
+        buf = BytesIO()
         try:
             im.save(buf, im.format, **im.info)
         except IOError:

@@ -44,7 +44,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
         cls.green = (0, 255, 0, 255)
         cls.blue = (0, 0, 255, 255)
         cls.yellow = (255, 255, 0, 255)
-        cls.image = Image.open(os.path.join(os.path.dirname(__file__), 'test-image.png'), "r")
+        cls.image = Image.open(os.path.join(os.path.dirname(__file__), 'test-image.png'))
 
     def test_crop(self):
         self.assertRaises(
