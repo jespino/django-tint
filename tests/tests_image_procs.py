@@ -26,7 +26,6 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 # MIDDLE check
                 result = result and image.getpixel((x, int(height/2))) == colors_middle[0]
                 result = result and image.getpixel(((width/2), int(height/2))) == colors_middle[1]
-                print image.getpixel(((width/2), int(height/2)))
                 result = result and image.getpixel((width-edge_width+x, int(height/2))) == colors_middle[2]
 
             if colors_bottom:
