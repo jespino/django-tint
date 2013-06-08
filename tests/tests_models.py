@@ -29,8 +29,10 @@ class ModelsTestCase(unittest.TestCase):
         )
 
     def test_image_get_by_transformation(self):
-        with self.assertRaises(models.Thumbnail.DoesNotExist):
-            self.image.get_by_transformation('test1')
+        self.assertRaises(
+            models.Thumbnail.DoesNotExist,
+            lambda: self.image.get_by_transformation('test1')
+        )
         self.image.get_absolute_url('test1', True),
         self.assertIsInstance(self.image.get_by_transformation('test1'), models.Thumbnail)
 
@@ -71,11 +73,15 @@ class ModelsTestCase(unittest.TestCase):
         )
 
     def test_thumbnail_manager_get_or_create_at_transformation(self):
-        with self.assertRaises(ValueError):
-            models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "invalid-transformation")
+        self.assertRaises(
+            ValueError,
+            lambda: models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "invalid-transformation")
+        )
 
-        with self.assertRaises(models.Image.DoesNotExist):
-            models.Thumbnail.objects.get_or_create_at_transformation(-1, "test1")
+        self.assertRaises(
+            models.Image.DoesNotExist,
+            lambda: models.Thumbnail.objects.get_or_create_at_transformation(-1, "test1")
+        )
 
         self.assertEqual(models.Thumbnail.objects.all().count(), 0)
         self.assertIsInstance(models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"), models.Thumbnail)

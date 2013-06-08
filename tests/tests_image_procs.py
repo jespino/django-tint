@@ -47,11 +47,15 @@ class DefaultImageProcTestCase(unittest.TestCase):
         cls.image = Image.open(os.path.join(os.path.dirname(__file__), 'test-image.png'), "r")
 
     def test_crop(self):
-        with self.assertRaises(Exception):
-            image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'invalid', "valign": 'top' })
+        self.assertRaises(
+                Exception,
+                lambda: self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'invalid', "valign": 'top' })
+        )
 
-        with self.assertRaises(Exception):
-            image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'invalid' })
+        self.assertRaises(
+            Exception,
+            lambda: self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'invalid' })
+        )
 
         image_result = self.proc.crop(self.image.copy(), { "width": 1280, "height": 960 })
         self.assertEqual((640, 480), image_result.size)
