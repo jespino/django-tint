@@ -1,15 +1,37 @@
+import os
+
 SECRET_KEY = "123"
 
-INSTALLED_APPS = [
-    'sr'
-]
-
-SR = {
-    'test1': 'Test1',
-    'test2': {
-        'test3': 'Test3',
-    },
-    'test4': {
-        'test4': 'Test4 {0} {1}',
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'test',                      # Or path to database file if using sqlite3.
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',                      # Set to empty string for default.
     }
 }
+
+INSTALLED_APPS = [
+    'django_tits'
+]
+
+MEDIA_URL = "/media/"
+ROOT_URLCONF = "test_urls"
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "media")
+
+TITS_TRANSFORMATIONS = {
+  'test1': [
+      {
+          "action": 'fit',
+          "width": 1024,
+          "height": 768,
+          "align": 'center',
+          "valign": 'middle',
+      },
+  ],
+}
+
+TITS_KEEP_IMAGES = False
+TITS_KEEP_THUMBNAILS = False

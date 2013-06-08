@@ -82,30 +82,30 @@ keys the parameters to use in this action. Example::
   TITS_TRANSFORMATIONS = {
     'example1': [
         {
-            action: 'fit',
-            width: '1024',
-            height: '768',
-            align: 'center',
-            valign: 'middle',
+            "action": 'fit',
+            "width": 1024,
+            "height": 768,
+            "align": 'center',
+            "valign": 'middle',
         },
         {
-            action: 'watermark',
-            image: 'example.watermark.png',
-            opacity: 0.5,
+            "action": 'watermark',
+            "image": 'example.watermark.png',
+            "opacity": 0.5,
         },
     ],
     'example2': [
         {
-            action: 'fit',
-            width: '800',
-            height: '600',
-            align: 'center',
-            valign: 'middle',
+            "action": 'fit',
+            "width": 800,
+            "height": 600,
+            "align": 'center',
+            "valign": 'middle',
         },
         {
-            action: 'watermark',
-            image: 'example.watermark.png',
-            opacity: 0.5,
+            "action": 'watermark',
+            "image": 'example.watermark.png',
+            "opacity": 0.5,
         },
     ]
   }

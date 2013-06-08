@@ -4,13 +4,16 @@ import os.path
 from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.urlresolvers import reverse
+from django.dispatch import receiver
 
-from .settings import TITS_TRANSFORMATIONS
+from .settings import TITS_TRANSFORMATIONS, TITS_KEEP_IMAGES, TITS_KEEP_THUMBNAILS
 
 from .imageprocs import image_proc
 
+
 def hashed_upload_to(prefix, instance, filename):
     hasher = hashlib.md5()
+    instance.image.open()
     for chunk in instance.image.chunks():
         hasher.update(chunk)
     hash = hasher.hexdigest()
@@ -87,8 +90,18 @@ class Thumbnail(models.Model):
     def get_absolute_url(self):
         return self.image.url
 
+@receiver(models.signals.post_save)
 def original_changed(sender, instance, created, **kwargs):
     if isinstance(instance, Image):
         instance.thumbnail_set.all().delete()
 
-models.signals.post_save.connect(original_changed)
+@receiver(models.signals.post_delete)
+def remove_image(sender, instance, **kwargs):
+    print instance
+    if isinstance(instance, Image):
+        if not TITS_KEEP_IMAGES:
+            instance.image.delete(save=False)
+
+    if isinstance(instance, Thumbnail):
+        if not TITS_KEEP_THUMBNAILS:
+            instance.image.delete(save=False)
