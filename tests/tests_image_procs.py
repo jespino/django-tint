@@ -1,5 +1,5 @@
 from PIL import Image, ImageOps, ImageEnhance, ImageFile
-from django_tits.imageprocs.default import DefaultImageProc
+from tits.imageprocs.default import DefaultImageProc
 
 import unittest
 import os

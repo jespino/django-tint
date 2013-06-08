@@ -33,7 +33,7 @@ setup(name='django-tits',
       author_email='jespinog@gmail.com',
       description='Transparent image transformation system',
       license='BSD',
-      version=':versiontools:django_tits:',
+      version=':versiontools:tits:',
       setup_requires = [
           'versiontools >= 1.8',
       ],

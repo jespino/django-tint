@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 
 from django_jinja.base import env
 
-from django_tits import models
+from tits import models
 
 import os
 

@@ -1,4 +1,4 @@
-from django_tits import settings
+from tits import settings
 from django.utils.importlib import import_module
 
 __all__ = ('image_proc',)

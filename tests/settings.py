@@ -14,7 +14,7 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
-    'django_tits'
+    'tits'
 ]
 
 MEDIA_URL = "/media/"

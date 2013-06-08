@@ -2,7 +2,7 @@ from django.core.files.images import ImageFile
 from django.core.management import call_command
 from django.core.urlresolvers import reverse
 
-from django_tits import models
+from tits import models
 import unittest
 import os
 
