@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages
 import os
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
