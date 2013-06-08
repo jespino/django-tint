@@ -97,7 +97,6 @@ def original_changed(sender, instance, created, **kwargs):
 
 @receiver(models.signals.post_delete)
 def remove_image(sender, instance, **kwargs):
-    print instance
     if isinstance(instance, Image):
         if not TITS_KEEP_IMAGES:
             instance.image.delete(save=False)
