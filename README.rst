@@ -2,6 +2,12 @@
 
 ------
 
+.. image:: https://travis-ci.org/jespino/django-tits.png?branch=master
+    :target: https://travis-ci.org/jespino/django-tits
+
+.. image:: https://coveralls.io/repos/jespino/django-tits/badge.png?branch=master
+    :target: https://coveralls.io/r/jespino/django-tits?branch=master
+
 .. image:: https://pypip.in/v/django-tits/badge.png
     :target: https://crate.io/packages/django-tits
 

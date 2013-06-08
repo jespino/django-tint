@@ -34,7 +34,7 @@ class ModelsTestCase(unittest.TestCase):
             lambda: self.image.get_by_transformation('test1')
         )
         self.image.get_absolute_url('test1', True),
-        self.assertIsInstance(self.image.get_by_transformation('test1'), models.Thumbnail)
+        self.assertTrue(isinstance(self.image.get_by_transformation('test1'), models.Thumbnail))
 
     def test_image_get_absolute_url(self):
         self.assertEqual(
@@ -84,9 +84,9 @@ class ModelsTestCase(unittest.TestCase):
         )
 
         self.assertEqual(models.Thumbnail.objects.all().count(), 0)
-        self.assertIsInstance(models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"), models.Thumbnail)
+        self.assertTrue(isinstance(models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"), models.Thumbnail))
         self.assertEqual(models.Thumbnail.objects.all().count(), 1)
-        self.assertIsInstance(models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"), models.Thumbnail)
+        self.assertTrue(isinstance(models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"), models.Thumbnail))
         self.assertEqual(models.Thumbnail.objects.all().count(), 1)
 
     def test_thumbnail_get_absolute_url(self):
