@@ -28,7 +28,7 @@ class TemplateTagsTestCase(unittest.TestCase):
         self.assertEqual(result, reverse('image-thumbnail', args=(self.image.id, 'test1')))
         self.image.get_absolute_url('test1', True)
         result = Template("{% load tits %}{{ image|at_transformation:'test1' }}").render(context)
-        self.assertEqual(result, '/media/image/thumbnail/by-md5/a/3/a3395e1c1dc5ada82958c73f33c6641b/test-image.png')
+        self.assertEqual(result, '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png')
 
     def test_tits_django_jinja_global_function(self):
         context = Context({ "image": self.image })
@@ -36,4 +36,4 @@ class TemplateTagsTestCase(unittest.TestCase):
         self.assertEqual(result, reverse('image-thumbnail', args=(self.image.id, 'test1')))
         self.image.get_absolute_url('test1', True)
         result = env.from_string("{{ image_at_transformation(image, 'test1') }}").render(context)
-        self.assertEqual(result, '/media/image/thumbnail/by-md5/a/3/a3395e1c1dc5ada82958c73f33c6641b/test-image.png')
+        self.assertEqual(result, '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png')

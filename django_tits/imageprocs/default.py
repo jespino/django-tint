@@ -100,7 +100,7 @@ class DefaultImageProc(object):
         watermark = orig_watermark.copy()
 
         opacity = params.get('opacity', None)
-        if opacity:
+        if opacity is not None:
             alpha = watermark.split()[3]
             alpha = ImageEnhance.Brightness(alpha).enhance(float(opacity))
             watermark.putalpha(alpha)

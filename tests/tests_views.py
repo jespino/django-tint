@@ -33,6 +33,6 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
                 response.get('location'),
-                'http://testserver/media/image/thumbnail/by-md5/a/3/a3395e1c1dc5ada82958c73f33c6641b/test-image.png'
+                'http://testserver/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png'
         )
         self.assertEqual(models.Thumbnail.objects.all().count(), 1)

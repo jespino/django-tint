@@ -25,7 +25,7 @@ class ModelsTestCase(unittest.TestCase):
     def test_hashed_upload_to(self):
         self.assertEqual(
             models.hashed_upload_to("test/", self.image, 'test-image.png'),
-            'test/6/f/6f5880e604fb46ff9bcbc89a90edbe98/test-image.png'
+            'test/4/e/4edc7685d17aa4d5c0c07a44e0e44f27/test-image.png'
         )
 
     def test_image_get_by_transformation(self):
@@ -37,7 +37,7 @@ class ModelsTestCase(unittest.TestCase):
     def test_image_get_absolute_url(self):
         self.assertEqual(
             self.image.get_absolute_url(),
-            '/media/image/original/by-md5/6/f/6f5880e604fb46ff9bcbc89a90edbe98/test-image.png'
+            '/media/image/original/by-md5/4/e/4edc7685d17aa4d5c0c07a44e0e44f27/test-image.png'
         )
         self.assertEqual(
             self.image.get_absolute_url('test1'),
@@ -45,12 +45,12 @@ class ModelsTestCase(unittest.TestCase):
         )
         self.assertEqual(
             self.image.get_absolute_url('test1', True),
-            '/media/image/thumbnail/by-md5/a/3/a3395e1c1dc5ada82958c73f33c6641b/test-image.png'
+            '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png'
 
         )
         self.assertEqual(
             self.image.get_absolute_url('test1'),
-            '/media/image/thumbnail/by-md5/a/3/a3395e1c1dc5ada82958c73f33c6641b/test-image.png'
+            '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png'
         )
         models.Thumbnail.objects.all().delete()
         self.assertEqual(
@@ -61,13 +61,13 @@ class ModelsTestCase(unittest.TestCase):
     def test_image_upload_to(self):
         self.assertEqual(
             models.image_upload_to(self.image, 'test-image.png'),
-            'image/original/by-md5/6/f/6f5880e604fb46ff9bcbc89a90edbe98/test-image.png'
+            'image/original/by-md5/4/e/4edc7685d17aa4d5c0c07a44e0e44f27/test-image.png'
         )
 
     def test_thumbnail_upload_to(self):
         self.assertEqual(
             models.thumbnail_upload_to(self.image, 'test-image.png'),
-            'image/thumbnail/by-md5/6/f/6f5880e604fb46ff9bcbc89a90edbe98/test-image.png'
+            'image/thumbnail/by-md5/4/e/4edc7685d17aa4d5c0c07a44e0e44f27/test-image.png'
         )
 
     def test_thumbnail_manager_get_or_create_at_transformation(self):
@@ -87,7 +87,7 @@ class ModelsTestCase(unittest.TestCase):
         self.image.get_absolute_url('test1', True),
         self.assertEqual(
             models.Thumbnail.objects.all()[0].get_absolute_url(),
-            '/media/image/thumbnail/by-md5/a/3/a3395e1c1dc5ada82958c73f33c6641b/test-image.png'
+            '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png'
         )
 
     def test_original_changed(self):

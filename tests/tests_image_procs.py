@@ -26,6 +26,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 # MIDDLE check
                 result = result and image.getpixel((x, int(height/2))) == colors_middle[0]
                 result = result and image.getpixel(((width/2), int(height/2))) == colors_middle[1]
+                print image.getpixel(((width/2), int(height/2)))
                 result = result and image.getpixel((width-edge_width+x, int(height/2))) == colors_middle[2]
 
             if colors_bottom:
@@ -47,6 +48,15 @@ class DefaultImageProcTestCase(unittest.TestCase):
         cls.image = Image.open(os.path.join(os.path.dirname(__file__), 'test-image.png'), "r")
 
     def test_crop(self):
+        with self.assertRaises(Exception):
+            image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'invalid', "valign": 'top' })
+
+        with self.assertRaises(Exception):
+            image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'invalid' })
+
+        image_result = self.proc.crop(self.image.copy(), { "width": 1280, "height": 960 })
+        self.assertEqual((640, 480), image_result.size)
+
         image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'top' })
         self.assertImageEdges(
                 image_result,
@@ -73,7 +83,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.white, self.white, self.green],
                 [self.white, self.white, self.white]
         )
-        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'left', "valign": 'middle' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 360, "align": 'left', "valign": 'middle' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -91,7 +101,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
                 [self.white, self.white, self.white]
         )
 
-        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 240, "align": 'right', "valign": 'middle' })
+        image_result = self.proc.crop(self.image.copy(), { "width": 320, "height": 360, "align": 'right', "valign": 'middle' })
         self.assertImageEdges(
                 image_result,
                 10,
@@ -171,7 +181,7 @@ class DefaultImageProcTestCase(unittest.TestCase):
         image_result = self.proc.scale(self.image.copy(), { "height": 80, "width": 60})
         self.assertImageEdges(
                 image_result,
-                4,
+                3,
                 [self.red, self.white, self.green],
                 [self.white, self.white, self.white],
                 [self.blue, self.white, self.yellow]
@@ -188,3 +198,30 @@ class DefaultImageProcTestCase(unittest.TestCase):
         self.assertEqual(image_result.getpixel((10, 20)), (255, 0, 0, 255))
         self.assertEqual(image_result.getpixel((10, 120)), (255, 255, 255, 255))
         self.assertEqual(image_result.getpixel((3, 120)), (255, 0, 0, 255))
+
+    def test_watermark(self):
+        watermark_path = os.path.join(os.path.dirname(__file__), 'watermark.png')
+        image_result = self.proc.watermark(self.image.copy(), {"watermark_image": watermark_path, "opacity": 0.5})
+        self.assertImageEdges(
+                image_result,
+                1,
+                None,
+                [self.white, (128, 128, 128, 255), self.white],
+                None,
+        )
+        image_result = self.proc.watermark(self.image.copy(), {"watermark_image": watermark_path, "opacity": 0})
+        self.assertImageEdges(
+                image_result,
+                1,
+                None,
+                [self.white, self.white, self.white],
+                None,
+        )
+        image_result = self.proc.watermark(self.image.copy(), {"watermark_image": watermark_path, "opacity": 1})
+        self.assertImageEdges(
+                image_result,
+                1,
+                None,
+                [self.white, self.black, self.white],
+                None,
+        )
