@@ -18,7 +18,7 @@ INSTALLED_APPS = [
 ]
 
 MEDIA_URL = "/media/"
-ROOT_URLCONF = "test_urls"
+ROOT_URLCONF = "tests.urls"
 MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "media")
 
 TITS_TRANSFORMATIONS = {
