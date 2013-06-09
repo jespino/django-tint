@@ -3,5 +3,5 @@
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns("",
-    url(r"", include('tits.urls')),
+    url(r"", include('tint.urls')),
 )

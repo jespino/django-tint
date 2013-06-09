@@ -14,14 +14,14 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
-    'tits'
+    'tint'
 ]
 
 MEDIA_URL = "/media/"
 ROOT_URLCONF = "tests.urls"
 MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "media")
 
-TITS_TRANSFORMATIONS = {
+TINT_TRANSFORMATIONS = {
   'test1': [
       {
           "action": 'fit',
@@ -33,7 +33,7 @@ TITS_TRANSFORMATIONS = {
   ],
 }
 
-TITS_KEEP_IMAGES = False
-TITS_KEEP_THUMBNAILS = False
+TINT_KEEP_IMAGES = False
+TINT_KEEP_THUMBNAILS = False
 
 ALLOWED_HOSTS = ["testserver"]

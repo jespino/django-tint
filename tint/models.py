@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 
-from .settings import TITS_TRANSFORMATIONS, TITS_KEEP_IMAGES, TITS_KEEP_THUMBNAILS
+from .settings import TINT_TRANSFORMATIONS, TINT_KEEP_IMAGES, TINT_KEEP_THUMBNAILS
 
 from .imageprocs import image_proc
 
@@ -59,12 +59,12 @@ def thumbnail_upload_to(instance, filename, **kwargs):
 class ThumbnailManager(models.Manager):
     def get_or_create_at_transformation(self, image_id, transformation):
         image = Image.objects.get(id=image_id)
-        if not transformation in TITS_TRANSFORMATIONS:
+        if not transformation in TINT_TRANSFORMATIONS:
             raise ValueError("Received unknown transformation: %s" % transformation)
         try:
             thumbnail = image.get_by_transformation(transformation)
         except Thumbnail.DoesNotExist:
-            buf = image_proc.transform(image.image, *TITS_TRANSFORMATIONS[transformation])
+            buf = image_proc.transform(image.image, *TINT_TRANSFORMATIONS[transformation])
             # and save to storage
             original_dir, original_file = os.path.split(image.image.name)
             thumb_file = InMemoryUploadedFile(buf, "image", original_file, None, buf.tell(), None)
@@ -98,9 +98,9 @@ def original_changed(sender, instance, created, **kwargs):
 @receiver(models.signals.post_delete)
 def remove_image(sender, instance, **kwargs):
     if isinstance(instance, Image):
-        if not TITS_KEEP_IMAGES:
+        if not TINT_KEEP_IMAGES:
             instance.image.delete(save=False)
 
     if isinstance(instance, Thumbnail):
-        if not TITS_KEEP_THUMBNAILS:
+        if not TINT_KEEP_THUMBNAILS:
             instance.image.delete(save=False)

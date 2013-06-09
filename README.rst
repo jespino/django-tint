@@ -1,31 +1,30 @@
-.. image:: logo/logo.png
+DJango Transparent Image Neat Transformer
+-----------------------------------------
 
-------
+.. image:: https://travis-ci.org/jespino/django-tint.png?branch=master
+    :target: https://travis-ci.org/jespino/django-tint
 
-.. image:: https://travis-ci.org/jespino/django-tits.png?branch=master
-    :target: https://travis-ci.org/jespino/django-tits
+.. image:: https://coveralls.io/repos/jespino/django-tint/badge.png?branch=master
+    :target: https://coveralls.io/r/jespino/django-tint?branch=master
 
-.. image:: https://coveralls.io/repos/jespino/django-tits/badge.png?branch=master
-    :target: https://coveralls.io/r/jespino/django-tits?branch=master
+.. image:: https://pypip.in/v/django-tint/badge.png
+    :target: https://crate.io/packages/django-tint
 
-.. image:: https://pypip.in/v/django-tits/badge.png
-    :target: https://crate.io/packages/django-tits
-
-.. image:: https://pypip.in/d/django-tits/badge.png
-    :target: https://crate.io/packages/django-tits
+.. image:: https://pypip.in/d/django-tint/badge.png
+    :target: https://crate.io/packages/django-tint
 
 Usage
 ~~~~~
 
-You must define your transformation in your :code:`TITS_TRANSFORMATIONS` settings
+You must define your transformation in your :code:`TINT_TRANSFORMATIONS` settings
 variable.
 
 You set your images on your models puting a :code:`ForeignKey` to
-:code:`tits.models.Image`.
+:code:`tint.models.Image`.
 
 Then you put your images in your templates using the :code:`at_transformation` filter. Example::
 
-  {% load tits %}
+  {% load tint %}
 
   <img src="{{ mymodel.my_image_field|at_transformation:"my-transformation-definition" }}" />
 
@@ -37,7 +36,7 @@ If you use django-jinja you only have to use the :code:`image_at_transformation`
 Default ImageProc Actions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Django-tits default Image Processor comes with some actions, here you have the
+Django-tint default Image Processor comes with some actions, here you have the
 list:
 
 +-----------------+-------------------------------+--------------------------+
@@ -72,11 +71,11 @@ list:
 Configuration
 ~~~~~~~~~~~~~
 
-In Django-tits you can define your :code:`ImageProc` class (normally will be a subclass
+In Django-tint you can define your :code:`ImageProc` class (normally will be a subclass
 of the :code:`DefaultImageProc`) to add your own image transformations. You can use it
-configuring the :code:`TITS_IMAGE_PROCESSOR` settings variable. Example::
+configuring the :code:`TINT_IMAGE_PROCESSOR` settings variable. Example::
 
-  TITS_IMAGE_PROCESSOR = 'myapp.my_image_processor_module.MyImageProcessorClass'
+  TINT_IMAGE_PROCESSOR = 'myapp.my_image_processor_module.MyImageProcessorClass'
 
 If the variable is not defined the :code:`DefaultImageProc` is used.
 
@@ -85,7 +84,7 @@ transformation is the key, and the value is a list of "actions". An action is a
 dictionary with one key 'action' with the name of the action, and the other
 keys the parameters to use in this action. Example::
 
-  TITS_TRANSFORMATIONS = {
+  TINT_TRANSFORMATIONS = {
     'example1': [
         {
             "action": 'fit',

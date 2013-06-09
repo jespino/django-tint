@@ -1,5 +1,5 @@
 from PIL import Image, ImageOps, ImageEnhance, ImageFile
-from tits.imageprocs.default import DefaultImageProc
+from tint.imageprocs.default import DefaultImageProc
 
 import unittest
 import os

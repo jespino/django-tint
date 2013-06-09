@@ -28,12 +28,12 @@ REQUIREMENTS = [
     'pillow >= 1.7.8',
 ]
 
-setup(name='django-tits',
+setup(name='django-tint',
       author='Jesús Espino',
       author_email='jespinog@gmail.com',
       description='Transparent image transformation system',
       license='BSD',
-      version=':versiontools:tits:',
+      version=':versiontools:tint:',
       setup_requires = [
           'versiontools >= 1.8',
       ],

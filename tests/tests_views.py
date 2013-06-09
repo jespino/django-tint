@@ -6,7 +6,7 @@ from django.test import TestCase
 
 from django_jinja.base import env
 
-from tits import models
+from tint import models
 
 import os
 
