@@ -1,4 +1,4 @@
-DJango Transparent Image Neat Transformer
+Django Transparent Image Neat Transformer
 -----------------------------------------
 
 .. image:: https://travis-ci.org/jespino/django-tint.png?branch=master
