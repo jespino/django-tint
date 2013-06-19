@@ -1,6 +1,9 @@
 Django Transparent Image Neat Transformer
 -----------------------------------------
 
+.. image:: http://kaleidos.net/static/img/badge.png
+    :target: http://www.kaleidos.net/community/django-tint/
+
 .. image:: https://travis-ci.org/jespino/django-tint.png?branch=master
     :target: https://travis-ci.org/jespino/django-tint
 
