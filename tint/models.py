@@ -5,6 +5,7 @@ from django.db import models
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy as _
 
 from .settings import TINT_TRANSFORMATIONS, TINT_KEEP_IMAGES, TINT_KEEP_THUMBNAILS
 
@@ -27,8 +28,10 @@ def hashed_upload_to(prefix, instance, filename):
         'ext': ext,
     }
 
+
 def image_upload_to(instance, filename, **kwargs):
     return hashed_upload_to('image/original/by-md5/', instance, filename)
+
 
 class Image(models.Model):
     image = models.ImageField(upload_to=image_upload_to,
@@ -36,6 +39,16 @@ class Image(models.Model):
             max_length=255)
     height = models.PositiveIntegerField(default=0, editable=False)
     width = models.PositiveIntegerField(default=0, editable=False)
+
+    class Meta:
+        ordering = ["id"]
+        verbose_name = _(u"image")
+        verbose_name_plural = _(u"images")
+
+    def __unicode__(self):
+        if self.image:
+            return self.image.name
+        return _(u"Image #{0}").format(self.id)
 
     def get_by_transformation(self, transformation):
         return self.thumbnail_set.get(transformation=transformation)
@@ -73,6 +86,7 @@ class ThumbnailManager(models.Manager):
                 defaults={'image': thumb_file})
         return thumbnail
 
+
 class Thumbnail(models.Model):
     original = models.ForeignKey(Image)
     image = models.ImageField(upload_to=thumbnail_upload_to,
@@ -85,10 +99,19 @@ class Thumbnail(models.Model):
     objects = ThumbnailManager()
 
     class Meta:
+        ordering = ["id"]
         unique_together = ('original', 'transformation')
+        verbose_name = _(u"thumbnail")
+        verbose_name_plural = _(u"thumbnails")
+
+    def __unicode__(self):
+        if self.image:
+            return self.image.name
+        return _(u"Thumbnail Image #{0}").format(self.id)
 
     def get_absolute_url(self):
         return self.image.url
+
 
 @receiver(models.signals.post_save)
 def original_changed(sender, instance, created, **kwargs):
