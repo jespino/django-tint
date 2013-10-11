@@ -1,14 +1,12 @@
-from django.utils import unittest
-from django.template import Template, Context
 from django.core.files.images import ImageFile
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from django_jinja.base import env
-
 from tint import models
 
 import os
+import re
+
 
 class ViewsTestCase(TestCase):
     def setUp(self):
@@ -31,8 +29,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(models.Thumbnail.objects.all().count(), 0)
         response = self.client.get(reverse('image-thumbnail', args=(self.image.id, 'test1')))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(
-                response.get('location'),
-                'http://testserver/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png'
-        )
+        self.assertIsNotNone(re.search(
+            'http://testserver/media/image/thumbnail/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            response.get('location')
+        ))
         self.assertEqual(models.Thumbnail.objects.all().count(), 1)

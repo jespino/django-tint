@@ -8,6 +8,8 @@ from django_jinja.base import env
 from tint import models
 
 import os
+import re
+
 
 class TemplateTagsTestCase(unittest.TestCase):
     def setUp(self):
@@ -23,17 +25,23 @@ class TemplateTagsTestCase(unittest.TestCase):
         models.Thumbnail.objects.all().delete()
 
     def test_tint_django_templatetag(self):
-        context = Context({ "image": self.image })
+        context = Context({"image": self.image})
         result = Template("{% load tint %}{{ image|at_transformation:'test1' }}").render(context)
         self.assertEqual(result, reverse('image-thumbnail', args=(self.image.id, 'test1')))
         self.image.get_absolute_url('test1', True)
         result = Template("{% load tint %}{{ image|at_transformation:'test1' }}").render(context)
-        self.assertEqual(result, '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png')
+        self.assertIsNotNone(re.search(
+            '/media/image/thumbnail/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            result
+        ))
 
     def test_tint_django_jinja_global_function(self):
-        context = Context({ "image": self.image })
+        context = Context({"image": self.image})
         result = env.from_string("{{ image_at_transformation(image, 'test1') }}").render(context)
         self.assertEqual(result, reverse('image-thumbnail', args=(self.image.id, 'test1')))
         self.image.get_absolute_url('test1', True)
         result = env.from_string("{{ image_at_transformation(image, 'test1') }}").render(context)
-        self.assertEqual(result, '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png')
+        self.assertIsNotNone(re.search(
+            '/media/image/thumbnail/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            result
+        ))

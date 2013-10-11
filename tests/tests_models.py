@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from tint import models
 import unittest
 import os
+import re
 
 call_command('syncdb', interactive=False)
 
@@ -23,10 +24,10 @@ class ModelsTestCase(unittest.TestCase):
         models.Thumbnail.objects.all().delete()
 
     def test_hashed_upload_to(self):
-        self.assertEqual(
-            models.hashed_upload_to("test/", self.image, 'test-image.png'),
-            'test/4/e/4edc7685d17aa4d5c0c07a44e0e44f27/test-image.png'
-        )
+        self.assertIsNotNone(re.search(
+            'test/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            models.hashed_upload_to("test/", self.image, 'test-image.png')
+        ))
 
     def test_image_get_by_transformation(self):
         self.assertRaises(
@@ -37,23 +38,22 @@ class ModelsTestCase(unittest.TestCase):
         self.assertTrue(isinstance(self.image.get_by_transformation('test1'), models.Thumbnail))
 
     def test_image_get_absolute_url(self):
-        self.assertEqual(
-            self.image.get_absolute_url(),
-            '/media/image/original/by-md5/4/e/4edc7685d17aa4d5c0c07a44e0e44f27/test-image.png'
-        )
+        self.assertIsNotNone(re.search(
+            '/media/image/original/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            self.image.get_absolute_url()
+        ))
         self.assertEqual(
             self.image.get_absolute_url('test1'),
             reverse('image-thumbnail', args=(self.image.id, 'test1'))
         )
-        self.assertEqual(
-            self.image.get_absolute_url('test1', True),
-            '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png'
-
-        )
-        self.assertEqual(
-            self.image.get_absolute_url('test1'),
-            '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png'
-        )
+        self.assertIsNotNone(re.search(
+            '/media/image/thumbnail/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            self.image.get_absolute_url('test1', True)
+        ))
+        self.assertIsNotNone(re.search(
+            '/media/image/thumbnail/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            self.image.get_absolute_url('test1')
+        ))
         models.Thumbnail.objects.all().delete()
         self.assertEqual(
             self.image.get_absolute_url('test1'),
@@ -61,16 +61,16 @@ class ModelsTestCase(unittest.TestCase):
         )
 
     def test_image_upload_to(self):
-        self.assertEqual(
-            models.image_upload_to(self.image, 'test-image.png'),
-            'image/original/by-md5/4/e/4edc7685d17aa4d5c0c07a44e0e44f27/test-image.png'
-        )
+        self.assertIsNotNone(re.search(
+            'image/original/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            models.image_upload_to(self.image, 'test-image.png')
+        ))
 
     def test_thumbnail_upload_to(self):
-        self.assertEqual(
-            models.thumbnail_upload_to(self.image, 'test-image.png'),
-            'image/thumbnail/by-md5/4/e/4edc7685d17aa4d5c0c07a44e0e44f27/test-image.png'
-        )
+        self.assertIsNotNone(re.search(
+            'image/thumbnail/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            models.thumbnail_upload_to(self.image, 'test-image.png')
+        ))
 
     def test_thumbnail_manager_get_or_create_at_transformation(self):
         self.assertRaises(
@@ -84,17 +84,23 @@ class ModelsTestCase(unittest.TestCase):
         )
 
         self.assertEqual(models.Thumbnail.objects.all().count(), 0)
-        self.assertTrue(isinstance(models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"), models.Thumbnail))
+        self.assertTrue(isinstance(
+            models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"),
+            models.Thumbnail
+        ))
         self.assertEqual(models.Thumbnail.objects.all().count(), 1)
-        self.assertTrue(isinstance(models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"), models.Thumbnail))
+        self.assertTrue(isinstance(
+            models.Thumbnail.objects.get_or_create_at_transformation(self.image.id, "test1"),
+            models.Thumbnail
+        ))
         self.assertEqual(models.Thumbnail.objects.all().count(), 1)
 
     def test_thumbnail_get_absolute_url(self):
         self.image.get_absolute_url('test1', True),
-        self.assertEqual(
-            models.Thumbnail.objects.all()[0].get_absolute_url(),
-            '/media/image/thumbnail/by-md5/3/f/3fe2d799fd59ef5a9c6b057eb546bed5/test-image.png'
-        )
+        self.assertIsNotNone(re.search(
+            '/media/image/thumbnail/by-md5/[a-f0-9]/[a-f0-9]/[a-f0-9]{32}/test-image.png',
+            models.Thumbnail.objects.all()[0].get_absolute_url()
+        ))
 
     def test_original_changed(self):
         self.assertEqual(models.Thumbnail.objects.all().count(), 0)
