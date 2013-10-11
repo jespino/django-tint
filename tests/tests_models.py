@@ -1,16 +1,16 @@
 from django.core.files.images import ImageFile
 from django.core.management import call_command
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 
 from tint import models
-import unittest
 import os
 import re
 
 call_command('syncdb', interactive=False)
 
 
-class ModelsTestCase(unittest.TestCase):
+class ModelsTestCase(TestCase):
     def setUp(self):
         image_file = open(os.path.join(os.path.dirname(__file__), 'test-image.png'), 'rb')
         self.image = models.Image.objects.create(
