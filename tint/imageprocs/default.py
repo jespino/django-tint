@@ -1,8 +1,9 @@
-import os
-
 from io import BytesIO
 
+from tint.settings import TINT_IMAGE_OUTPUT_FORMAT
+
 from PIL import Image, ImageOps, ImageEnhance, ImageFile
+
 
 class DefaultImageProc(object):
     def crop(self, image, params):
@@ -90,6 +91,9 @@ class DefaultImageProc(object):
     def scale(self, image, params):
         return image.resize((params['width'], params['height']), Image.ANTIALIAS)
 
+    def convert(self, image, params):
+        return image.convert(mode=params.get('mode', None))
+
     def watermark(self, image, params):
         orig_watermark = Image.open(params['watermark_image']).convert('RGBA')
         orig_watermark = orig_watermark.resize(image.size, Image.ANTIALIAS)
@@ -109,12 +113,15 @@ class DefaultImageProc(object):
         im_format, im_info = im.format, im.info
         for action in actions:
             im = getattr(self, action['action'])(im, action)
-        im.format, im.info = im_format, im_info
+
+        output_image_format = im_format
+        if TINT_IMAGE_OUTPUT_FORMAT:
+            output_image_format = TINT_IMAGE_OUTPUT_FORMAT
 
         # save to memory
         buf = BytesIO()
         try:
-            im.save(buf, im.format, **im.info)
+            im.save(buf, output_image_format, **im_info)
         except IOError:
             if im.info.get('progression'):
                 orig_MAXBLOCK = ImageFile.MAXBLOCK
@@ -123,7 +130,7 @@ class DefaultImageProc(object):
                     raise
                 ImageFile.MAXBLOCK = temp_MAXBLOCK
                 try:
-                    im.save(buf, im.format, **im.info)
+                    im.save(buf, output_image_format, **im_info)
                 finally:
                     ImageFile.MAXBLOCK = orig_MAXBLOCK
             else:

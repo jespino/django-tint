@@ -70,6 +70,9 @@ list:
 +-----------------+-------------------------------+--------------------------+
 | invert          | Invert the image colors.      |                          |
 +-----------------+-------------------------------+--------------------------+
+| convert         | Convert image mode (L, RGB or | mode                     |
+|                 | CYMK).                        |                          |
++-----------------+-------------------------------+--------------------------+
 
 Configuration
 ~~~~~~~~~~~~~
@@ -118,3 +121,14 @@ keys the parameters to use in this action. Example::
     ]
   }
 
+You can define the the removing of deleted images or thumnails model instances,
+remove the image file with the settings ``TINT_KEEP_THUMBNAILS`` and
+``TINT_KEEP_IMAGES``, the default value is True to both settings.
+
+You can define your file output format and your file output extension with the
+settings ``TINT_IMAGE_OUTPUT_FORMAT`` and ``TINT_IMAGE_OUTPUT_EXTENSION``. The
+default value is None this means use the same format and extension of the
+origin file. Example::
+
+  TINT_IMAGE_OUTPUT_FORMAT = "png"
+  TINT_IMAGE_OUTPUT_EXTENSION = ".png"

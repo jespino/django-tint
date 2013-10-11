@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
-from .settings import TINT_TRANSFORMATIONS, TINT_KEEP_IMAGES, TINT_KEEP_THUMBNAILS
+from .settings import TINT_TRANSFORMATIONS, TINT_KEEP_IMAGES, TINT_KEEP_THUMBNAILS, TINT_IMAGE_OUTPUT_EXTENSION
 
 from .imageprocs import image_proc
 
@@ -19,6 +19,8 @@ def hashed_upload_to(prefix, instance, filename):
         hasher.update(chunk)
     hash = hasher.hexdigest()
     base, ext = os.path.splitext(filename)
+    if TINT_IMAGE_OUTPUT_EXTENSION:
+        ext = TINT_IMAGE_OUTPUT_EXTENSION
     return '%(prefix)s%(first)s/%(second)s/%(hash)s/%(base)s%(ext)s' % {
         'prefix': prefix,
         'first': hash[0],
@@ -117,6 +119,7 @@ class Thumbnail(models.Model):
 def original_changed(sender, instance, created, **kwargs):
     if isinstance(instance, Image):
         instance.thumbnail_set.all().delete()
+
 
 @receiver(models.signals.post_delete)
 def remove_image(sender, instance, **kwargs):
